@@ -8,12 +8,59 @@ from datetime import timedelta, datetime
 import json
 from .models import Aula
 from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import requests
 
-from django.shortcuts import render
+# Función para obtener datos del clima desde OpenMeteo
+def fetch_clima_open_meteo(lat, lon):
+    """Fetch weather data from Open-Meteo API"""
+    url = f"https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "current": ["temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m"],
+        "timezone": "auto"
+    }
+    
+    response = requests.get(url, params=params)
+    response.raise_for_status()  # Lanzará una excepción si hay error HTTP
+    return response.json()
 
-def mapa_ubicacion(request):
+# Vista para el mapa y clima
+def mapa(request):
     """Vista para mostrar el mapa con la ubicación del usuario"""
-    return render(request, 'ubicacion_map.html')
+    return render(request, 'mapa.html')
+
+# Endpoint para obtener clima - acepta GET y POST
+@csrf_exempt
+def obtener_clima(request):
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            lat = payload.get("latitude")
+            lon = payload.get("longitude")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "JSON inválido"}, status=400)
+    elif request.method == "GET":
+        lat = request.GET.get("latitude")
+        lon = request.GET.get("longitude")
+    else:
+        return JsonResponse({"error": "Método no permitido"}, status=405)
+    
+    if lat is None or lon is None:
+        return JsonResponse({"error": "Coordenadas no válidas"}, status=400)
+    
+    try:
+        datos = fetch_clima_open_meteo(lat, lon)
+        return JsonResponse(datos, status=200)
+    except requests.exceptions.HTTPError as http_err:
+        return JsonResponse(
+            {"error": f"Error HTTP al obtener clima: {http_err}"}, status=502
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -98,7 +145,6 @@ def modify_class(request, pk):
 
 @login_required
 def global_view(request):
-
     aulas = Aula.objects.all()
     clases = None
     selected_aula = None
@@ -120,7 +166,3 @@ def global_view(request):
 
 def unauthorized_view(request):
     return render(request, 'unauthorized.html')
-
-
-
-

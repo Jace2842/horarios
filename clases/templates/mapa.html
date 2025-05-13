@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa y Clima</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #map {
+            height: 80vh;
+            width: 100%;
+        }
+        #panel {
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-top: 1px solid #ddd;
+        }
+        #btnUbicacion {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #btnUbicacion:hover {
+            background-color: #45a049;
+        }
+        #coordenadas, #clima {
+            margin-top: 10px;
+        }
+        .info-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .info-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 200px;
+        }
+        h4 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="map"></div>
+        <div id="panel">
+            <button id="btnUbicacion">Mostrar mi ubicación y clima</button>
+            <div class="info-container">
+                <div class="info-box">
+                    <h4>Ubicación</h4>
+                    <div id="coordenadas">Haz clic en el botón para obtener tu ubicación</div>
+                </div>
+                <div class="info-box">
+                    <h4>Clima actual</h4>
+                    <div id="clima">La información del clima se mostrará aquí</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        let map;
+        let userMarker;
+
+        function inicializarMapa() {
+            map = L.map('map').setView([40.416, -3.703], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+        }
+
+        async function mostrarUbicacionYClima() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    document.getElementById('coordenadas').innerHTML = `
+                        <p><strong>Latitud:</strong> ${lat.toFixed(6)}</p>
+                        <p><strong>Longitud:</strong> ${lon.toFixed(6)}</p>
+                    `;
+
+                    if (userMarker) {
+                        userMarker.setLatLng([lat, lon]);
+                    } else {
+                        userMarker = L.marker([lat, lon]).addTo(map).bindPopup('Estás aquí').openPopup();
+                    }
+
+                    map.setView([lat, lon], 15);
+
+                    // Llamada al backend Django
+                    try {
+                        const response = await fetch("{% url 'obtener_clima' %}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": getCookie("csrftoken")
+                            },
+                            body: JSON.stringify({ latitude: lat, longitude: lon })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`Error HTTP: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        if (data.current) {
+                            document.getElementById('clima').innerHTML = `
+                                <p><strong>Temperatura:</strong> ${data.current.temperature_2m} °C</p>
+                                <p><strong>Humedad:</strong> ${data.current.relative_humidity_2m} %</p>
+                                <p><strong>Precipitación:</strong> ${data.current.precipitation} mm</p>
+                                <p><strong>Viento:</strong> ${data.current.wind_speed_10m} m/s</p>
+                            `;
+                        } else {
+                            document.getElementById('clima').innerHTML = `<p style="color:red;">Error al obtener clima: ${JSON.stringify(data)}</p>`;
+                        }
+                    } catch (err) {
+                        console.error("Error:", err);
+                        document.getElementById('clima').innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+                        
+                        // Intentar con GET como alternativa
+                        try {
+                            const getResponse = await fetch(`{% url 'obtener_clima' %}?latitude=${lat}&longitude=${lon}`);
+                            if (!getResponse.ok) {
+                                throw new Error(`Error HTTP: ${getResponse.status}`);
+                            }
+                            
+                            const getData = await getResponse.json();
+                            if (getData.current) {
+                                document.getElementById('clima').innerHTML = `
+                                    <p><strong>Temperatura:</strong> ${getData.current.temperature_2m} °C</p>
+                                    <p><strong>Humedad:</strong> ${getData.current.relative_humidity_2m} %</p>
+                                    <p><strong>Precipitación:</strong> ${getData.current.precipitation} mm</p>
+                                    <p><strong>Viento:</strong> ${getData.current.wind_speed_10m} m/s</p>
+                                `;
+                            }
+                        } catch (getErr) {
+                            console.error("Error en petición GET:", getErr);
+                        }
+                    }
+                }, (error) => {
+                    console.error("Error de geolocalización:", error);
+                    document.getElementById('coordenadas').innerHTML = `<p style="color:red;">Error al obtener ubicación: ${error.message}</p>`;
+                });
+            } else {
+                alert("Tu navegador no soporta geolocalización.");
+            }
+        }
+
+        // Obtener token CSRF de cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            inicializarMapa();
+            document.getElementById('btnUbicacion').addEventListener('click', mostrarUbicacionYClima);
+        });
+    </script>
+</body>
+</html>
