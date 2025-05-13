@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'clases/style.css' %}">
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'create_class' %}">Crear Clase</a>
+    <a href="{% url 'modify_class_list' %}">Modificar Clase</a>
+    <a href="{% url 'logout' %}">Logout</a>
+    <a href="{% url 'global_view' %}">horario global</a>
+    <a href="{% url 'delete_class' %}">Borrar Clase</a>
+    
+</nav>
+<div class="container">
+    <h2>Selecciona una Clase para Modificar</h2>
+    <ul>
+        {% for clase in clases %}
+            <li>
+                {{ clase.nombre }} - {{ clase.fecha }} {{ clase.hora_inicio }} 
+                <a href="{% url 'modify_class' clase.pk %}">Modificar</a>
+            </li>
+        {% empty %}
+            <li>No tienes clases para modificar.</li>
+        {% endfor %}
+    </ul>
+</div>

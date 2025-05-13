@@ -1,0 +1,358 @@
+/* Estilos generales del cuerpo de la página */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('5331579.jpg');
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Estilos del encabezado */
+header {
+    background-color: #96234a;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+/* Estilos de la navegación principal */
+nav {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #96234a;
+}
+
+/* Estilos del contenedor principal del contenido */
+.container {
+    flex: 1;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1200px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Estilos de la sección de horarios */
+.horarios-section {
+    margin-bottom: 30px;
+}
+
+.horarios-section h2 {
+    color: #96234a;
+    border-bottom: 2px solid #96234a;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 2em;
+}
+
+/* Estilos de la tabla de horarios */
+.horario-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden; /* Para que el borde redondeado funcione */
+}
+
+.horario-tabla th, .horario-tabla td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.horario-tabla th {
+    background-color: #f8f8f8;
+    font-weight: bold;
+    color: #555;
+}
+
+.horario-tabla tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.horario-tabla tr:hover {
+    background-color: #f0f0f0;
+}
+
+.horario-tabla .curso {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.horario-tabla .asignatura {
+    color: #3498db;
+}
+
+.horario-tabla .docente {
+    color: #e67e22;
+    font-style: italic;
+}
+
+.horario-tabla .aula {
+    color: #27ae60;
+}
+
+/* Estilos para resaltar el día actual (opcional) */
+.horario-tabla .hoy {
+    background-color: #e74c3c;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilos de los filtros (si los hay) */
+.filtros {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+.filtros label {
+    margin-right: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+.filtros select, .filtros input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+.filtros button {
+    background-color: #96234a;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filtros button:hover {
+    background-color: #7d1d3a;
+}
+
+/* Estilos del pie de página */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 20px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+/* Estilos para mensajes de error o éxito */
+.mensaje-error {
+    background-color: #fdecea;
+    color: #c0392b;
+    padding: 15px;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.mensaje-exito {
+    background-color: #e8f6e5;
+    color: #27ae60;
+    padding: 15px;
+    border: 1px solid #2ecc71;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* Estilos para elementos de carga */
+.cargando {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    margin-top: 20px;
+}
+
+/* Estilos para enlaces importantes */
+.enlace-importante {
+    color: #96234a;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.enlace-importante:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para listas */
+ul.lista-cursos {
+    list-style: none;
+    padding: 0;
+}
+
+ul.lista-cursos li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-left: 5px solid #96234a;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}
+
+ul.lista-cursos li strong {
+    font-weight: bold;
+    color: #333;
+}
+
+ul.lista-cursos li span {
+    color: #777;
+    font-size: 0.9em;
+}
+
+/* Estilos para formularios */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+form input[type="text"],
+form input[type="email"],
+form select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form button[type="submit"] {
+    background-color: #96234a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #7d1d3a;
+}
+
+/* Estilos para modales o ventanas emergentes (ejemplo básico) */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Se mantiene en su lugar */
+    z-index: 1; /* Se sitúa por encima de otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Anchura completa */
+    height: 100%; /* Altura completa */
+    overflow: auto; /* Habilitar scroll si el contenido es largo */
+    background-color: rgba(0,0,0,0.4); /* Fondo oscuro con transparencia */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% desde la parte superior y centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Puede ser ajustado */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #96234a;
+    color: white;
+}
+
+form select {
+    max-height: 150px;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #96234a;
+    border-radius: 10px;
+}

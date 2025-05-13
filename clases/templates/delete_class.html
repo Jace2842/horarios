@@ -1,0 +1,57 @@
+{% load static %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const aulaSelect = document.querySelector("#id_aula");
+        const alumnosInput = document.querySelector("#id_numero_alumnos");
+    
+        if (aulaSelect) {
+            aulaSelect.addEventListener("change", function() {
+                const selectedOption = aulaSelect.options[aulaSelect.selectedIndex];
+                const capacidad = selectedOption.getAttribute("data-capacidad");
+                if (capacidad) {
+                    alert(`La capacidad máxima de esta aula es: ${capacidad} alumnos.`);
+                }
+            });
+        }
+    });
+    </script>
+<link rel="stylesheet" type="text/css" href="{% static 'clases/style.css' %}">
+<nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'create_class' %}">Crear Clase</a>
+    <a href="{% url 'modify_class_list' %}">Modificar Clase</a>
+    <a href="{% url 'logout' %}">Logout</a>
+    <a href="{% url 'global_view' %}">horario global</a>
+    <a href="{% url 'delete_class' %}">Borrar Clase</a>
+    
+</nav>
+<div class="container">
+    <h2>Eliminar Clase</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for clase in clases %}
+                <tr>
+                    <td>{{ clase.nombre }}</td>
+                    <td>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="clase_id" value="{{ clase.id }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No tienes clases para eliminar.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
