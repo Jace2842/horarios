@@ -33,6 +33,7 @@ nav .nav-container {
     justify-content: center;
     max-width: 1200px;
     width: 100%;
+    color: #555;
 }
 nav {
     width: 100%;
@@ -44,7 +45,7 @@ nav {
     font-size: 16px;
     z-index: 100;
     background-color: var(--dark-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
     position: sticky;
     top: 0;
 }
