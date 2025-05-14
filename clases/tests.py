@@ -37,7 +37,7 @@ class ClaseViewTest(TestCase):
 
     def test_login_required_redirect(self):
         response = self.client.get(reverse('home'))
-        self.assertRedirects(response, '/login/?next=/')
+        self.assertRedirects(response, '/login/?next=/home/')
     
     def test_create_class_view_authenticated(self):
         self.client.login(username='testuser', password='12345')

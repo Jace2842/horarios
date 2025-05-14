@@ -1,7 +1,7 @@
 from . import views
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .api import ClaseViewSet 
+from .api import ClaseViewSet
 # urls.py
 from django.urls import path
 from . import views
@@ -12,7 +12,8 @@ router.register(r'api/clases', ClaseViewSet)
 
 
 urlpatterns = [
-    path('', views.login_view, name='login'),
+    path('', views.login_view, name='login_root'),  # Keep this for the root URL
+    path('login/', views.login_view, name='login'),  # Add this for the /login/ URL
     path('register/', views.register_view, name='register'),
     path('logout/', views.logout_view, name='logout'),
     path('home/', views.home_view, name='home'),

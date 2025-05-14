@@ -26,11 +26,27 @@ header h1 {
 }
 
 /* Estilos de la navegación principal */
+
+nav .nav-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+    width: 100%;
+}
 nav {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
-    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 40px;
+    box-sizing: border-box;
+    font-size: 16px;
+    z-index: 100;
+    background-color: var(--dark-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
 }
 
 nav ul {
@@ -42,7 +58,7 @@ nav ul {
 }
 
 nav ul li {
-    margin: 0 15px;
+    margin: 0 25px; /* **CAMBIO:** Aumentamos el margen horizontal de 15px a 25px */
 }
 
 nav a {
